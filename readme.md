@@ -3,7 +3,7 @@ Olympic weightlifting - how much should I lift if I was the record (wo)man of my
 Human Bender
 2018-10-26
 
-<img src="C:/Users/Thomas/R-open/Olympic-weightlifting/bender_hex.png" style="position:absolute;top:0px;right:0px;" width="120px" align="right" />
+<img src="bender_hex.png" style="position:absolute;top:0px;right:0px;" width="120px" align="right" />
 
 Introduction
 ============
