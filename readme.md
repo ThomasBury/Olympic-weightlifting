@@ -13,7 +13,7 @@ The other day I was watching (in loop I've to admit), a video of the strongest m
 
 As the best things in life, the relation between personal record and bodyweight is not linear. I mean, at that time LT bodyweight was 166 kg and he snatched 220 kg, more or less 1.3 times his bodyweight. But in the lightest category (56 kg bodyweight) the world record is set at 139 kg, almost 2.5 times the corresponding bodyweight!
 
-The natural next question is: "is there an optimum between those two extremes ?". An quick and dirty empirical way to find it out is to plot the world records vs weight category. Let's check it out.
+The natural next question is: "is there an optimum between those two extremes ?" A quick and dirty empirical way to find it out is to plot the world records vs weight category. Let's check it out.
 
 Fetch the data from the Wikipedia page
 ======================================
