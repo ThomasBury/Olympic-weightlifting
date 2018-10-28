@@ -1,6 +1,7 @@
 <img src="bender_hex.png" style="position:absolute;top:0px;right:0px;" width="120px" align="right" />
+
 Olympic weightlifting - how much should I lift ?
-=======
+================================================
 
 Human Bender
 2018-10-28
