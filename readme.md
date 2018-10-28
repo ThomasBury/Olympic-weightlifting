@@ -1,10 +1,8 @@
-<<<<<<< HEAD
 Olympic weightlifting - how much should I lift ?
 =======
 <img src="bender_hex.png" style="position:absolute;top:0px;right:0px;" width="120px" align="right" />
 
 Olympic weightlifting - how much should I lift if I was the record (wo)man of my category ?
->>>>>>> 0c0b058bf38f680b3b6d629a66c20e56a724712f
 ================
 Human Bender
 2018-10-28
