@@ -1,7 +1,7 @@
-Olympic weightlifting - how much should I lift if I was the record (wo)man of my category ?
+Olympic weightlifting - how much should I lift ?
 ================
 Human Bender
-2018-10-26
+2018-10-28
 
 <img src="C:/Users/Thomas/R-open/Olympic-weightlifting/bender_hex.png" style="position:absolute;top:0px;right:0px;" width="120px" align="right" />
 
@@ -46,7 +46,8 @@ cat_men[(length(cat_men)-2):length(cat_men)] <- rep("166 kg", 3)
 men_dt <- men_dt[!cat_idx, ]
 men_dt <- men_dt[, category := cat_men]
 men_dt <- men_dt[, Ref := NULL]
-men_dt <- men_dt[, Ratio := readr::parse_number(Record)/readr::parse_number(category)]
+men_dt <- men_dt[, Ratio := readr::parse_number(Record) / readr::parse_number(category)]
+men_dt <- men_dt[, weight_over_bw := readr::parse_number(Record) - readr::parse_number(category)]
 
 # Let's do the same for the women records
 women_dt <- setDT(tables[[7]])
@@ -58,6 +59,7 @@ women_dt <- women_dt[!cat_idx, ]
 women_dt <- women_dt[, category := cat_women]
 women_dt <- women_dt[, Ref := NULL]
 women_dt <- women_dt[, Ratio := readr::parse_number(Record)/readr::parse_number(category)]
+women_dt <- women_dt[, weight_over_bw := readr::parse_number(Record) - readr::parse_number(category)]
 ```
 
 ``` r
@@ -116,6 +118,9 @@ sp_ratio_dt <- melt(data = sp_ratio_dt, id.vars = "bw")
 Mighty ggplot2
 ==============
 
+Ratio record/bodyweight
+-----------------------
+
 The first part was not so funny. Let's see for which category the ratio $\\frac{\\text{record}}{bodyweight}$ is the largest, meaning the *relative* strongest category. I also plot the absolute record vs bodyweight, just to visualise the slope.
 
 ``` r
@@ -128,16 +133,16 @@ p <- p + geom_point(size = 4) +
   geom_smooth(method = 'loess', se = T) + 
   theme_fivethirtyeight() + 
   scale_x_continuous( breaks = unique(parse_number(men_dt$category)), label = unique(men_dt$category) ) + 
-  ggtitle('Men: Record vs Bodyweight (category)') + 
-  xlab('Category / kg') + ylab('Record / kg') + scale_colour_brewer(palette = "Set1")
+  ggtitle('Men: Record per category (Bodyweight)') + 
+  xlab('Category  [kg]') + ylab('Record [kg]') + scale_color_viridis_d()
 
 p2 <- ggplot(men_dt, aes(x=readr::parse_number(category), y=Ratio, color = Event)) + geom_point(size = 4) +
   #geom_line(data = sp_ratio_dt, aes(x= bw, y = value, color = variable)) +
   geom_smooth(method = 'loess', se = T) + 
   theme_fivethirtyeight() + 
   scale_x_continuous( breaks = unique(parse_number(men_dt$category)), label = unique(men_dt$category) ) + 
-  ggtitle('Men: ratio Rec/Bodyweight vs Bodyweight (category)') + 
-  xlab('Category / kg') + ylab('Record / Bodyweight') + scale_colour_brewer(palette = "Set1")
+  ggtitle('Men: ratio Rec/Bodyweight per category') + 
+  xlab('Category [kg]') + ylab('Record / Bodyweight') + scale_color_viridis_d()
 
 p3 <- ggplot(women_dt, aes(x=readr::parse_number(category), y=readr::parse_number(Record), color = Event))
 
@@ -146,16 +151,16 @@ p3 <- p3 + geom_point(size = 4) +
   geom_smooth(method = 'loess', se = T) + 
   theme_fivethirtyeight() + 
   scale_x_continuous( breaks = unique(parse_number(women_dt$category)), label = unique(women_dt$category) ) + 
-  ggtitle('Women: Record vs Bodyweight (category)') + 
-  xlab('Category / kg') + ylab('Record / kg') + scale_colour_brewer(palette = "Set1")
+  ggtitle('Women: Record per category (Bodyweight)') + 
+  scale_color_viridis_d()
 
 p4 <- ggplot(women_dt, aes(x=readr::parse_number(category), y=Ratio, color = Event)) + geom_point(size = 4) +
   #geom_line(data = sp_ratio_dt, aes(x= bw, y = value, color = variable)) +
   geom_smooth(method = 'loess', se = T) + 
   theme_fivethirtyeight() + 
   scale_x_continuous( breaks = unique(parse_number(women_dt$category)), label = unique(women_dt$category) ) + 
-  ggtitle('Women: ratio Rec/Bodyweight vs Bodyweight (category)') + 
-  xlab('Category / kg') + ylab('Record / Bodyweight') + scale_colour_brewer(palette = "Set1")
+  ggtitle('Women: ratio Rec/Bodyweight per category') + 
+  xlab('Category [kg]') + ylab('Record / Bodyweight') + scale_color_viridis_d()
 
 # Grid them all
 plot_grid(p, p2, p3, p4, align = 'h', nrow = 2)
@@ -163,13 +168,100 @@ plot_grid(p, p2, p3, p4, align = 'h', nrow = 2)
 
 ![](olympic_w_files/figure-markdown_github/unnamed-chunk-4-1.png)
 
-Interpret the charts
-====================
-
 **Left panels**: the absolute records vs bodyweight. The heavier the athlete, the heavier the lift. However, the gain is smaller and smaller as the bodyweight increases, at least for men. The curve is like a frown. You'll lift heavier if your bodyweight is larger but if you weight 112 kg you'll not lift twice as much than the 56 kg record man. For women, there is a strange kind of plateau for the 75 - 90 kg category.
 
 **Right panels**, the ratio $\\frac{\\text{record}}{bodyweight}$ vs bodyweight. For the Clean and Jerk, this ratio is larger than 3 for the 56 kg category. The record man of this category can C&J more than 3 times his bodyweight (which is quite amazing). Regarding the heaviest category, represented by Lasha the strongest man on earth, the ratio is *only* about 1.6. Twice smaller.
 
-Of course this is a simplistic analysis, because the bodyweight cannot be the only explicative variable. Since all is about lifting a weight above the head, the height should be significant as well (considering physics and work to be done to lift the bar at a given height). The height and the bodyweight are correlated, as you guessed. The rest is explained pretty "easily" (or not) after 5 years studying the bio-mechanics of the human body.
+Another question we can answer empirically is: what should be the difference between my snatch and my clean and jerk personal records? On the previous charts, we can observe that the spread, the distance, between the snatch and C&J curve seems to be more or less constant
+
+``` r
+cj_snatch = men_dt[Event != "Total", .(Event, Record, category)]
+cj_snatch = data.table::dcast(cj_snatch, category ~ Event, value.var = 'Record')
+colnames(cj_snatch) = c("category", "cleanJ", "snatch")
+cj_snatch = cj_snatch[, spread := readr::parse_number(cleanJ)  - readr::parse_number(snatch)]
+
+cj_snatch_w = women_dt[Event != "Total", .(Event, Record, category)]
+cj_snatch_w = data.table::dcast(cj_snatch_w, category ~ Event, value.var = 'Record')
+colnames(cj_snatch_w) = c("category", "cleanJ", "snatch")
+cj_snatch_w = cj_snatch_w[, spread := readr::parse_number(cleanJ)  - readr::parse_number(snatch)]
+```
+
+``` r
+# more crappy code
+p <- ggplot(cj_snatch, aes(x=readr::parse_number(category), y=spread))
+
+# if you prefer the GAM fit, uncomment the geom_line and comment the geom_smooth
+p <- p + geom_point(size = 4, color = "royalblue") + 
+  #geom_line(data = sp_pr_dt, aes(x= bw, y = value, color = variable)) +
+  geom_smooth(method = 'loess', se = T, color = "grey50") + 
+  theme_fivethirtyeight() + 
+  scale_x_continuous( breaks = unique(parse_number(men_dt$category)), label = unique(men_dt$category) ) + 
+  ggtitle('Men: spread C&J - snatch per category') + 
+  xlab('Category / kg') + ylab('spread / kg') + scale_color_viridis_d()
+
+# women
+p_w <- ggplot(cj_snatch_w, aes(x=readr::parse_number(category), y=spread))
+
+# if you prefer the GAM fit, uncomment the geom_line and comment the geom_smooth
+p_w <- p_w + geom_point(size = 4, color = "royalblue") + 
+  #geom_line(data = sp_pr_dt, aes(x= bw, y = value, color = variable)) +
+  geom_smooth(method = 'loess', se = T, color = "grey50") + 
+  theme_fivethirtyeight() + 
+  scale_x_continuous( breaks = unique(parse_number(men_dt$category)), label = unique(men_dt$category) ) + 
+  ggtitle('Women: spread C&J - snatch per category') + 
+  xlab('Category / kg') + ylab('spread / kg') + scale_color_viridis_d()
+
+# Grid them all
+plot_grid(p, p_w, align = 'h', ncol = 2)
+```
+
+![](olympic_w_files/figure-markdown_github/unnamed-chunk-6-1.png)
+
+The spread between C&J and snatch for men is increasing with the bodyweight (starting at 30 kg difference and peaking at almost 50 kg) whereas the spread is constant for women at the notable exception of the heaviest category.
+
+How much more than your bodyweight can you lift?
+------------------------------------------------
+
+Another possibility the measure the efficiency is to measure the weight subtracted by your bodyweight (let's do that for Olympic athletes, in order to have positive numbers). So if an Athlete, 100 kg bodyweight, can snatch 202 kg then the result is therefore 102 kg.
+
+``` r
+# Here is some crappy code of mine to plot the record (or ratio rec/bodyweight) vs bodyweight
+p <- ggplot(men_dt[Event != "Total"], aes(x=readr::parse_number(category), 
+                        y=weight_over_bw, 
+                        color = Event))
+
+# if you prefer the GAM fit, uncomment the geom_line and comment the geom_smooth
+p <- p + geom_point(size = 4) + 
+  #geom_line(data = sp_pr_dt, aes(x= bw, y = value, color = variable)) +
+  geom_smooth(method = 'loess', se = T) + 
+  theme_fivethirtyeight() + 
+  scale_x_continuous( breaks = unique(parse_number(men_dt$category)), label = unique(men_dt$category) ) + 
+  ggtitle('Men: Record - Bodyweight per category') + 
+  xlab('Category / kg') + ylab('Record / kg') + scale_color_viridis_d()
+
+
+p3 <- ggplot(women_dt[Event != "Total"], aes(x=readr::parse_number(category), 
+                        y=weight_over_bw, 
+                        color = Event))
+p3 <- p3 + geom_point(size = 4) + 
+  #geom_line(data = sp_pr_dt, aes(x= bw, y = value, color = variable)) +
+  geom_smooth(method = 'loess', se = T) + 
+  theme_fivethirtyeight() + 
+  scale_x_continuous( breaks = unique(parse_number(women_dt$category)), label = unique(women_dt$category) ) + 
+  ggtitle('Women: Record - Bodyweight per category') + 
+  xlab('Category / kg') + ylab('Record / kg') + scale_color_viridis_d()
+
+
+# Grid them all
+plot_grid(p, p3, align = 'h', ncol = 2)
+```
+
+![](olympic_w_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+This chart is very informative and reveals that the 77 and 85 kg men categories are pretty efficient compared to the other categories, especially the heaviest. The 77 kg record man can snatch +- 100 kg more than his bodyweight whereas the LT snatched "only" +- 55 kg more than his bodyweight. How impressive is this! Whatever your category the limit seems to be 100 kg more than your bodyweight, at most (and +- 140 kg for clean and jerk). Both for the C&J and snatch, the curve looks like a "frown", the optimum being reached at the categories 105 kg and 85 kg, respectively.
+
+For women, the curve shape is a bit different due to the heaviest category. However, the most efficient one is the 75kg category. The performance is pretty constant across the 58, 63 and 69kg categories. Only the 75kg category peaks.
+
+Of course this is a simplistic analysis, because the bodyweight cannot be the only explicative variable. Since all is about lifting a weight above the head, the body height should be significant as well (considering physics and work to be done to lift the bar at a given height, etc.). The height and the bodyweight are correlated, as you guessed. The rest is explained pretty "easily" (or not) after 5 years studying the bio-mechanics of the human body.
 
 [Is there an asymptote, a limit ?](https://www.youtube.com/watch?v=8COaMKbNrX0&fbclid=IwAR2MBQOSZnwTxqRWLQ5Ja72O9CrGfxP2zaTkAFoUccGxQK8XS8TBZY9nifU)
