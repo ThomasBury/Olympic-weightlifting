@@ -1,9 +1,14 @@
+<<<<<<< HEAD
 Olympic weightlifting - how much should I lift ?
+=======
+<img src="bender_hex.png" style="position:absolute;top:0px;right:0px;" width="120px" align="right" />
+
+Olympic weightlifting - how much should I lift if I was the record (wo)man of my category ?
+>>>>>>> 0c0b058bf38f680b3b6d629a66c20e56a724712f
 ================
 Human Bender
 2018-10-28
 
-<img src="C:/Users/Thomas/R-open/Olympic-weightlifting/bender_hex.png" style="position:absolute;top:0px;right:0px;" width="120px" align="right" />
 
 Introduction
 ============
@@ -12,7 +17,7 @@ The other day I was watching (in loop I've to admit), a video of the strongest m
 
 As the best things in life, the relation between personal record and bodyweight is not linear. I mean, at that time LT bodyweight was 166 kg and he snatched 220 kg, more or less 1.3 times his bodyweight. But in the lightest category (56 kg bodyweight) the world record is set at 139 kg, almost 2.5 times the corresponding bodyweight!
 
-The natural next question is: "is there an optimum between those two extremes ?". An quick and dirty empirical way to find it out is to plot the world records vs weight category. Let's check it out.
+The natural next question is: "is there an optimum between those two extremes ?" A quick and dirty empirical way to find it out is to plot the world records vs weight category. Let's check it out.
 
 Fetch the data from the Wikipedia page
 ======================================
